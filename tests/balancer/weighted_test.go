@@ -1,6 +1,7 @@
 package balancer_test
 
 import (
+	"reflect"
 	"testing"
 
 	"janus/internal/balancer"
@@ -152,4 +153,34 @@ func abs(x int) int {
 		return -x
 	}
 	return x
+}
+
+func TestWeightedCleanup(t *testing.T) {
+	w := balancer.NewWeighted()
+	pool := domain.NewServerPool()
+
+	s1, _ := domain.NewServer("http://localhost:8081", 1)
+	s2, _ := domain.NewServer("http://localhost:8082", 1)
+	pool.AddServer(s1)
+	pool.AddServer(s2)
+
+	w.GetNextServer(pool)
+
+	if getMapSize(w) != 2 {
+		t.Fatalf("expected map size 2, got %d", getMapSize(w))
+	}
+
+	s2.SetAlive(false)
+
+	w.GetNextServer(pool)
+
+	if getMapSize(w) != 1 {
+		t.Errorf("expected map size 1 after cleanup, got %d", getMapSize(w))
+	}
+}
+
+func getMapSize(w *balancer.Weighted) int {
+	val := reflect.Indirect(reflect.ValueOf(w))
+	field := val.FieldByName("currentWeights")
+	return field.Len()
 }

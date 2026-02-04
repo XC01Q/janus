@@ -26,6 +26,19 @@ func (w *Weighted) GetNextServer(pool *domain.ServerPool) *domain.Server {
 		return nil
 	}
 
+	if len(w.currentWeights) > len(servers) {
+		healthyMap := make(map[*domain.Server]bool, len(servers))
+		for _, s := range servers {
+			healthyMap[s] = true
+		}
+
+		for s := range w.currentWeights {
+			if !healthyMap[s] {
+				delete(w.currentWeights, s)
+			}
+		}
+	}
+
 	totalWeight := 0
 	for _, s := range servers {
 		totalWeight += s.Weight
