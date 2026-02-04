@@ -2,7 +2,7 @@
 
 ### Load Balancer written in Go.
 
-Janus is a lightweight load balancer designed for reliability and ease of use. It supports multiple balancing strategies, active health checks, and a clean architecture.
+Janus is a lightweight load balancer designed for reliability and ease of use. It supports multiple balancing strategies and active health checks.
 
 ## 🚀 Quick Start
 
