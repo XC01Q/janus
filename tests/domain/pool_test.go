@@ -73,15 +73,15 @@ func TestServerPoolGetHealthyServers(t *testing.T) {
 		t.Errorf("healthy count = %d, want 3", len(healthy))
 	}
 
-	server2.SetAlive(false)
+	pool.SetServerStatus(server2, false)
 
 	healthy = pool.GetHealthyServers()
 	if len(healthy) != 2 {
 		t.Errorf("healthy count after one down = %d, want 2", len(healthy))
 	}
 
-	server1.SetAlive(false)
-	server3.SetAlive(false)
+	pool.SetServerStatus(server1, false)
+	pool.SetServerStatus(server3, false)
 
 	healthy = pool.GetHealthyServers()
 	if len(healthy) != 0 {
@@ -125,7 +125,7 @@ func TestServerPoolHealthyCount(t *testing.T) {
 		t.Errorf("healthy count = %d, want 2", pool.HealthyCount())
 	}
 
-	server1.SetAlive(false)
+	pool.SetServerStatus(server1, false)
 	if pool.HealthyCount() != 1 {
 		t.Errorf("healthy count after one down = %d, want 1", pool.HealthyCount())
 	}

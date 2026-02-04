@@ -68,7 +68,7 @@ func (h *HealthChecker) checkServer(server *domain.Server) {
 	wasAlive := server.IsAlive()
 
 	if err != nil {
-		server.SetAlive(false)
+		h.pool.SetServerStatus(server, false)
 
 		if wasAlive {
 			log.Printf("[WARN] Server %s is DOWN: %v", server.URL, err)
@@ -77,7 +77,7 @@ func (h *HealthChecker) checkServer(server *domain.Server) {
 	}
 
 	conn.Close()
-	server.SetAlive(true)
+	h.pool.SetServerStatus(server, true)
 
 	if !wasAlive {
 		log.Printf("[INFO] Server %s is UP", server.URL)

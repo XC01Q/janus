@@ -102,7 +102,7 @@ func TestWeightedSkipsUnhealthy(t *testing.T) {
 	pool.AddServer(server2)
 	pool.AddServer(server3)
 
-	server2.SetAlive(false)
+	pool.SetServerStatus(server2, false)
 
 	for i := 0; i < 20; i++ {
 		selected := w.GetNextServer(pool)
@@ -120,7 +120,7 @@ func TestWeightedAllUnhealthy(t *testing.T) {
 	pool := domain.NewServerPool()
 
 	server, _ := domain.NewServer("http://localhost:8081", 1)
-	server.SetAlive(false)
+	pool.SetServerStatus(server, false)
 	pool.AddServer(server)
 
 	result := w.GetNextServer(pool)
@@ -170,7 +170,7 @@ func TestWeightedCleanup(t *testing.T) {
 		t.Fatalf("expected map size 2, got %d", getMapSize(w))
 	}
 
-	s2.SetAlive(false)
+	pool.SetServerStatus(s2, false)
 
 	w.GetNextServer(pool)
 

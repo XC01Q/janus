@@ -1,0 +1,13 @@
+.git
+.gitignore
+.idea
+.vscode
+tests
+loadtest
+README.md
+task.md
+review.md
+*.log
+*.md
+docker-compose.yml
+Dockerfile

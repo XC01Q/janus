@@ -1,6 +1,7 @@
 package balancer_test
 
 import (
+	"strconv"
 	"testing"
 
 	"janus/internal/balancer"
@@ -11,25 +12,11 @@ func createTestPoolRR(count int) *domain.ServerPool {
 	pool := domain.NewServerPool()
 
 	for i := 0; i < count; i++ {
-		server, _ := domain.NewServer("http://localhost:"+itoa(8081+i), 1)
+		server, _ := domain.NewServer("http://localhost:"+strconv.Itoa(8081+i), 1)
 		pool.AddServer(server)
 	}
 
 	return pool
-}
-
-func itoa(n int) string {
-	if n == 0 {
-		return "0"
-	}
-
-	var digits []byte
-	for n > 0 {
-		digits = append([]byte{byte('0' + n%10)}, digits...)
-		n /= 10
-	}
-
-	return string(digits)
 }
 
 func TestRoundRobinName(t *testing.T) {
@@ -99,7 +86,7 @@ func TestRoundRobinSkipsUnhealthy(t *testing.T) {
 	pool.AddServer(server2)
 	pool.AddServer(server3)
 
-	server2.SetAlive(false)
+	pool.SetServerStatus(server2, false)
 
 	seen := make(map[string]bool)
 	for i := 0; i < 10; i++ {
@@ -121,7 +108,7 @@ func TestRoundRobinAllUnhealthy(t *testing.T) {
 	pool := domain.NewServerPool()
 
 	server, _ := domain.NewServer("http://localhost:8081", 1)
-	server.SetAlive(false)
+	pool.SetServerStatus(server, false)
 	pool.AddServer(server)
 
 	result := rr.GetNextServer(pool)

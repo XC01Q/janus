@@ -5,6 +5,7 @@ import (
 	"net"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 	"time"
 
@@ -66,7 +67,7 @@ func TestHealthCheckerDetectsRecovery(t *testing.T) {
 	port := listener.Addr().(*net.TCPAddr).Port
 	listener.Close()
 
-	srv, _ := domain.NewServer("http://localhost:"+itoa(port), 1)
+	srv, _ := domain.NewServer("http://localhost:"+strconv.Itoa(port), 1)
 	pool.AddServer(srv)
 
 	checker := server.NewHealthChecker(pool, 1*time.Second)
@@ -82,7 +83,7 @@ func TestHealthCheckerDetectsRecovery(t *testing.T) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
-	newListener, err := net.Listen("tcp", "localhost:"+itoa(port))
+	newListener, err := net.Listen("tcp", "localhost:"+strconv.Itoa(port))
 	if err != nil {
 		t.Skip("cannot recreate listener on same port")
 	}
@@ -173,16 +174,4 @@ func TestHealthCheckerMultipleServers(t *testing.T) {
 	if srv2.IsAlive() {
 		t.Error("srv2 should not be alive")
 	}
-}
-
-func itoa(n int) string {
-	if n == 0 {
-		return "0"
-	}
-	var digits []byte
-	for n > 0 {
-		digits = append([]byte{byte('0' + n%10)}, digits...)
-		n /= 10
-	}
-	return string(digits)
 }

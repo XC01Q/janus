@@ -3,7 +3,7 @@ FROM golang:1.25-alpine AS builder
 WORKDIR /app
 
 COPY go.mod ./
-RUN go mod download
+RUN go mod download && go mod verify
 
 COPY . .
 

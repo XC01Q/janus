@@ -18,3 +18,14 @@ coverage.out
 
 # Logs
 *.log
+
+# Load Test Artifacts
+janus-proxy
+dummy-backend
+load_test_results.txt
+config_load.json
+loadtest/janus-proxy
+loadtest/dummy-backend
+loadtest/*.log
+loadtest/*.txt
+loadtest/*.json

@@ -101,7 +101,7 @@ func TestLeastConnectionsSkipsUnhealthy(t *testing.T) {
 	pool.AddServer(server1)
 	pool.AddServer(server2)
 
-	server1.SetAlive(false)
+	pool.SetServerStatus(server1, false)
 
 	for i := 0; i < 10; i++ {
 		server2.IncrementConnections()
@@ -122,7 +122,7 @@ func TestLeastConnectionsAllUnhealthy(t *testing.T) {
 	pool := domain.NewServerPool()
 
 	server, _ := domain.NewServer("http://localhost:8081", 1)
-	server.SetAlive(false)
+	pool.SetServerStatus(server, false)
 	pool.AddServer(server)
 
 	result := lc.GetNextServer(pool)
