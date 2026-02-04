@@ -1,0 +1,19 @@
+{
+  "port": 8080,
+  "health_check_time": 5,
+  "strategy": "round_robin",
+  "backends": [
+    {
+      "url": "http://localhost:8081",
+      "weight": 1
+    },
+    {
+      "url": "http://localhost:8082",
+      "weight": 2
+    },
+    {
+      "url": "http://localhost:8083",
+      "weight": 1
+    }
+  ]
+}
